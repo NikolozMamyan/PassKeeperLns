@@ -34,7 +34,11 @@ security:
                 path: app_logout
 
     access_control:
-        - { path: ^/credentials/api, roles: ROLE_USER }
+        - { path: ^/credentials/*, roles: ROLE_USER }
+        - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+
+
         # Ajoute d'autres règles ici si besoin (ex: admin, profil, etc.)
 
 when@test:
