@@ -1,19 +1,191 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Inscription | DashSafe{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .register-container {
+            max-width: 450px;
+            margin: 80px auto;
+            padding: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .register-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .register-header {
+            background: linear-gradient(135deg, #4f46e5, #818cf8);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .register-icon {
+            width: 85%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .register-form {
+            padding: 30px;
+            background: white;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+            outline: none;
+        }
+
+        .btn-primary {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #4f46e5, #818cf8);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.2s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25);
+        }
+
+        .register-footer {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 14px;
+            color: #777;
+        }
+
+        .register-footer a {
+            color: #4f46e5;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .register-footer a:hover {
+            color: #818cf8;
+        }
+
+        #flying-bg {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: rgba(59, 130, 246, 0.5);
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
+            animation: rise 10s linear infinite;
+            will-change: transform, opacity;
+        }
+
+        @keyframes rise {
+            0% { transform: translateY(100vh) scale(0.4) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; }
+        }
+    </style>
+{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
+<div id="flying-bg"></div>
 
-    {{ form_errors(registrationForm) }}
+<div class="container">
+    <div class="register-container">
+        <div class="register-header">
+            <div class="register-icon">
+                <img src="https://pro.ultrapop.com/frontend/img/ultrapop-logo-full.svg" alt="Logo" class="register-icon"/>
+            </div>
+        </div>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+        <div class="register-form">
+            {{ form_start(registrationForm) }}
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+            <div class="form-group">
+                {{ form_label(registrationForm.email, 'Adresse email', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(registrationForm.email) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(registrationForm.plainPassword, 'Mot de passe', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(registrationForm.plainPassword) }}
+            </div>
+
+            <div class="form-group" style="margin-top: 20px;">
+                {{ form_widget(registrationForm.agreeTerms) }}
+                {{ form_label(registrationForm.agreeTerms) }}
+                {{ form_errors(registrationForm.agreeTerms) }}
+            </div>
+
+            <button type="submit" class="btn-primary">Créer un compte</button>
+
+            {{ form_end(registrationForm) }}
+
+            <div class="register-footer">
+                <p>Déjà inscrit ? <a href="{{ path('app_login') }}">Se connecter</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const BG = document.getElementById('flying-bg');
+        const N  = 45;
+        for (let i = 0; i < N; i++) {
+            const p = document.createElement('span');
+            p.className = 'particle';
+            p.style.left = (Math.random() * 100) + 'vw';
+            p.style.animationDelay = (Math.random() * 8) + 's';
+            p.style.animationDuration = (8 + Math.random() * 6) + 's';
+            const s = 6 + Math.random() * 10;
+            p.style.width = p.style.height = s + 'px';
+            p.style.opacity = 0.6 + Math.random() * 0.35;
+            BG.appendChild(p);
+        }
+    });
+</script>
 {% endblock %}

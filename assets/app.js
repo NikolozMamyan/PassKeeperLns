@@ -1,10 +1,11 @@
-import './bootstrap.js';
-/*
- * Welcome to your app's main JavaScript file!
- *
- * This file will be included onto the page via the importmap() Twig function,
- * which should already be in your base.html.twig.
- */
-import './styles/app.css';
+// assets/controllers/index.js
+import { Application } from "@hotwired/stimulus";
+import PasswordToggleController from "./controllers/password_toggle_controller.js";
+import PasswordStrengthController from "./controllers/password_strength_controller.js";
+import CredentialFormController from "./controllers/credential_form_controller.js";
 
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
+const application = Application.start();
+
+application.register("password-toggle", PasswordToggleController);
+application.register("password-strength", PasswordStrengthController);
+application.register("credential-form", CredentialFormController);

@@ -1,41 +1,251 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Connexion | DashSafe{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .login-container {
+            max-width: 450px;
+            margin: 80px auto;
+            padding: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        
+        .login-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+        
+        .login-header {
+            background: linear-gradient(135deg, #4f46e5, #818cf8);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+        
+        .login-icon {
+            width: 70%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .login-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .login-subtitle {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+        
+        .login-form {
+            padding: 30px;
+            background: white;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        
+        .form-control:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+            outline: none;
+        }
+        
+        .btn-primary {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #4f46e5, #818cf8);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.2s;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25);
+        }
+        
+        .alert {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .alert-danger {
+            background-color: #ffe5e5;
+            border-left: 4px solid #ff3b3b;
+            color: #d80000;
+        }
+        
+        .alert-info {
+            background-color: #e5f0ff;
+            border-left: 4px solid #3b82f6;
+            color: #1e40af;
+        }
+        
+        .login-footer {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 14px;
+            color: #777;
+        }
+        
+        .login-footer a {
+            color: #4f46e5;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .login-footer a:hover {
+            color: #818cf8;
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin: 15px 0 25px;
+        }
+        
+        .remember-me input {
+            margin-right: 8px;
+        }
+                /* =========================
+           Effet « particules volantes »
+           ========================= */
+        #flying-bg {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;   /* cache les particules hors champ */
+            z-index: -1;        /* derrière le reste du contenu */
+            pointer-events: none;
+        }
+.particle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+ background: rgba(59, 130, 246, 0.5); /* bleu */
+
+
+    border-radius: 50%;
+   box-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
+    animation: rise 10s linear infinite;
+    will-change: transform, opacity;
+}
+
+        @keyframes rise {
+            0%   { transform: translateY(100vh) scale(0.4) rotate(0deg);   opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; }
+        }
+    </style>
+{% endblock %}
 
 {% block body %}
-    <form method="post">
-        {% if error %}
-            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-        {% endif %}
 
-        {% if app.user %}
-            <div class="mb-3">
-                You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+<div id="flying-bg"></div>
+
+    <div class="container">
+        <div class="login-container">
+            <div class="login-header">
+                <div class="">
+                       <img src="https://pro.ultrapop.com/frontend/img/ultrapop-logo-full.svg" class="login-icon"/>
+                </div>
+
             </div>
-        {% endif %}
-
-        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-        <label for="username">Email</label>
-        <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
-        <label for="password">Password</label>
-        <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
-
-        <input type="hidden" name="_csrf_token"
-               value="{{ csrf_token('authenticate') }}"
-        >
-
-        {#
-            Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-            See https://symfony.com/doc/current/security/remember_me.html
-
-            <div class="checkbox mb-3">
-                <input type="checkbox" name="_remember_me" id="_remember_me">
-                <label for="_remember_me">Remember me</label>
+            
+            <div class="login-form">
+                {% if app.user %}
+                    <div class="alert alert-info">
+                        Vous êtes connecté en tant que {{ app.user.userIdentifier }}
+                        <a href="{{ path('app_logout') }}" class="text-decoration-underline">Se déconnecter</a>
+                    </div>
+                {% endif %}
+                
+               
+                
+                <form method="post">
+                    <div class="form-group">
+                        <label for="username" class="form-label">Adresse email</label>
+                        <input type="email" value="" name="_username" id="username" 
+                            class="form-control" autocomplete="email" required autofocus>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password" class="form-label">Mot de passe</label>
+                        <input type="password" name="_password" id="password" 
+                            class="form-control" autocomplete="current-password" required>
+                    </div>
+                    
+                    <div class="remember-me">
+                        <input type="checkbox" name="_remember_me" id="_remember_me">
+                        <label for="_remember_me">Se souvenir de moi</label>
+                    </div>
+                    
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                    
+                    <button class="btn-primary" type="submit">
+                   Se connecter
+                    </button>
+                </form>
+                <div class="login-footer">
+                    <p>Vous n'avez pas de compte ? <a href="{{ path('app_register') }}">Créer un compte</a></p>
+                    <p><a href="">Mot de passe oublié ?</a></p>
+                </div>
             </div>
-        #}
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const BG = document.getElementById('flying-bg');
+            const N  = 45;                       // nombre de particules à créer
+            for (let i = 0; i < N; i++) {
+                const p = document.createElement('span');
+                p.className = 'particle';
 
-        <button class="btn btn-lg btn-primary" type="submit">
-            Sign in
-        </button>
-    </form>
+                // position horizontale aléatoire
+                p.style.left = (Math.random() * 100) + 'vw';
+
+                // décalage & durée d’animation aléatoires => effet naturel
+                p.style.animationDelay    = (Math.random() * 8) + 's';
+                p.style.animationDuration = (8 + Math.random() * 6) + 's';
+
+                // petites variations de taille et d’opacité
+                const s = 6 + Math.random() * 10;
+                p.style.width  = p.style.height = s + 'px';
+                p.style.opacity = 0.6 + Math.random() * 0.35;
+
+                BG.appendChild(p);
+            }
+        });
+    </script>
 {% endblock %}
