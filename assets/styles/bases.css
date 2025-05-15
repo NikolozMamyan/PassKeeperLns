@@ -1,0 +1,122 @@
+  :root {
+    --primary-color: #6c63ff;
+    --primary-hover: #5a52e0;
+    --secondary-color: #00c9a7;
+    --text-color: #333333;
+    --surface-color: #ffffff;
+    --shadow-color: rgba(0, 0, 0, 0.05);
+    --border-radius: 12px;
+    --transition-fast: 0.2s ease;
+    --transition-medium: 0.3s ease;
+    --transition-slow: 0.4s ease;
+    --accent-color: #ff6b6b;
+    --priority-high: #ef4444;
+  }
+  
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f9fafb;
+    margin: 0;
+    padding: 0;
+    color: var(--text-color);
+  }
+
+  .flash-message {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  padding: 1rem 1.5rem;
+  width: fit-content;
+  max-width: 90%;
+  overflow-x: hidden;
+  will-change: transform;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.5s ease-out, stay 2s ease, swipeOut 0.5s ease-in 4.5s forwards;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+/* Close button */
+.flash-message .close-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+/* Label colors (can be tailored to your classes or bootstrap) */
+.alert-success {
+  background-color: #4caf50;
+}
+
+.alert-error,
+.alert-danger {
+  background-color: #f44336;
+}
+
+.alert-warning {
+  background-color: #ff9800;
+}
+
+.alert-info {
+  background-color: #2196f3;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes swipeOut {
+  to {
+    display: none;
+   transform: translatey(-120%);
+
+  }
+}
+
+/* Responsive */
+  @media (max-width: 992px) {
+    .search-container {
+      width: 250px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .top-actions {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 15px;
+    }
+
+    .search-container {
+      width: 100%;
+    }
+
+    .passwords-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .content-container {
+      padding: 20px 15px;
+    }
+
+    .dashboard-header {
+      padding: 0 15px;
+    }
+  }

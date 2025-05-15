@@ -17,9 +17,23 @@
         {% endblock %}
     </head>
     <body>
+    {% for label, messages in app.flashes %}
+  {% for message in messages %}
+    <div class="flash-message alert alert-{{ label }}" data-flash>
+      {{ message }}
+      <button type="button" class="close-btn" data-action="click->flash#close">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  {% endfor %}
+{% endfor %}
 
-
+       {% include 'components/sidebar.html.twig' %}
+       <div class="main-content">
+       {% include 'components/header.html.twig' %}
+                  
         {% block body %}{% endblock %}
         </div>
+
     </body>
 </html>

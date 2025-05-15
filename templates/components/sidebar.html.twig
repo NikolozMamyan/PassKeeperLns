@@ -1,0 +1,53 @@
+<!-- Sidebar -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo">
+      <i class="fas fa-lock"></i>
+      <img class="logo-text" src="https://pro.ultrapop.com/frontend/img/ultrapop-logo-full.svg" style="width:150px;"/>
+    </div>
+  </div>
+  <div class="sidebar-menu">
+    <a href="{{ path('credential_index') }}" class="menu-item active">
+      <i class="fas fa-key"></i>
+      <span>Mes identifiants</span>
+    </a>
+    <a href="#" class="menu-item">
+      <i class="fas fa-folder"></i>
+      <span>Catégories</span>
+    </a>
+    <a href="#" class="menu-item">
+      <i class="fas fa-shield-alt"></i>
+      <span>Sécurité</span>
+    </a>
+    <a href="#" class="menu-item">
+      <i class="fas fa-share-alt"></i>
+      <span>Partage</span>
+    </a>
+    <a href="#" class="menu-item">
+      <i class="fas fa-history"></i>
+      <span>Historique</span>
+    </a>
+    <a href="#" class="menu-item">
+      <i class="fas fa-cog"></i>
+      <span>Paramètres</span>
+    </a>
+  </div>
+  <div class="sidebar-footer">
+    <div class="user-profile">
+      <div class="user-avatar">
+        {% if app.user %}
+          {{ app.user.email|first|upper }}
+        {% else %}
+          <i class="fas fa-user"></i>
+        {% endif %}
+      </div>
+      <div class="user-name">
+        {% if app.user %}
+          {{ app.user.email }}
+        {% else %}
+          Utilisateur
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

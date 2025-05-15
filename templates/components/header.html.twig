@@ -1,0 +1,25 @@
+  <div class="dashboard-header">
+    <div class="dashboard-title">Controller[Name]</div>
+    <div class="header-actions">
+      <div class="notification-bell">
+        <i class="fas fa-bell"></i>
+        <span class="notification-count">2</span>
+      </div>
+      <div class="user-profile">
+        <div class="user-avatar">
+          {% if app.user %}
+            {{ app.user.email|first|upper }}
+          {% else %}
+            <i class="fas fa-user"></i>
+          {% endif %}
+        </div>
+        <div class="user-name">
+          {% if app.user %}
+            {{ app.user.email }} 👋
+          {% else %}
+            Utilisateur
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
