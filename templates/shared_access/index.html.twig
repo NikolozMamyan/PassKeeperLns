@@ -8,10 +8,16 @@
   <div class="page-header">
     <h1>Gestion des accès partagés</h1>
     <p class="subtitle">Partagez vos identifiants avec d'autres utilisateurs en toute sécurité.</p>
+    
+    <a href="{{ path('shared_access_new') }}" class="primary-btn">
+      <i class="fas fa-share-alt"></i>
+      <span>Nouveau partage</span>
+    </a>
   </div>
 
   {% for message in app.flashes('success') %}
     <div class="alert alert-success">
+      <i class="fas fa-check-circle alert-icon"></i>
       <span>{{ message }}</span>
       <button class="close-btn"><i class="fas fa-times"></i></button>
     </div>
@@ -19,177 +25,458 @@
 
   {% for message in app.flashes('error') %}
     <div class="alert alert-danger">
+      <i class="fas fa-exclamation-circle alert-icon"></i>
       <span>{{ message }}</span>
       <button class="close-btn"><i class="fas fa-times"></i></button>
     </div>
   {% endfor %}
 
-  <div class="shared-access-section">
-    <div class="section-header">
-      <h2>Identifiants que j'ai partagés</h2>
-      <a href="{{ path('shared_access_new') }}" class="primary-btn-static">
-        <i class="fas fa-share-alt"></i>
-        <span>Partager des identifiants</span>
-      </a>
+  <div class="tabs-container">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="shared-by-me">
+        <i class="fas fa-share-alt"></i> Partagés par moi
+      </button>
+      <button class="tab-btn" data-tab="shared-with-me">
+        <i class="fas fa-inbox"></i> Partagés avec moi
+      </button>
     </div>
-
-    {% if sharedByMe is empty %}
-      <div class="empty-state">
-        <div class="empty-icon">
-          <i class="fas fa-share-alt"></i>
-        </div>
-        <h3 class="empty-title">Aucun partage effectué</h3>
-        <p class="empty-text">Vous n'avez partagé aucun identifiant avec d'autres utilisateurs.</p>
-      </div>
-    {% else %}
-      <div class="shared-access-list">
-        {% for access in sharedByMe %}
-          <div class="shared-access-card">
-            <div class="shared-with">
-              <div class="user-avatar">{{ access.guest.email|first|upper }}</div>
-              <div class="user-info">
-                <div class="user-name">{{ access.guest.name }}</div>
-                <div class="user-email">{{ access.guest.email }}</div>
-                <div class="sharing-date">Partagé le {{ access.createdAt|date('d/m/Y') }}</div>
-              </div>
-            </div>
-            <div class="shared-credential">
-              <div class="credential-icon">{{ access.credential.name|first|upper }}</div>
-              <div class="credential-info">
-                <div class="credential-name">{{ access.credential.name }}</div>
-                <div class="credential-domain">{{ access.credential.domain }}</div>
-              </div>
-            </div>
-            <div class="shared-actions">
-              <form method="post" action="{{ path('shared_access_revoke', {'id': access.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir révoquer cet accès partagé ?');">
-                <input type="hidden" name="_token" value="{{ csrf_token('revoke' ~ access.id) }}">
-                <button type="submit" class="danger-btn">
-                  <i class="fas fa-trash"></i>
-                  <span>Révoquer</span>
-                </button>
-              </form>
-            </div>
+    
+    <div id="shared-by-me" class="tab-content active">
+      {% if sharedByMe is empty %}
+        <div class="empty-state">
+          <div class="empty-icon">
+            <i class="fas fa-share-alt"></i>
           </div>
-        {% endfor %}
-      </div>
-    {% endif %}
+          <h3 class="empty-title">Aucun partage effectué</h3>
+          <p class="empty-text">Vous n'avez partagé aucun identifiant avec d'autres utilisateurs.</p>
+          <a href="{{ path('shared_access_new') }}" class="primary-btn-static">
+            <i class="fas fa-plus"></i> Commencer à partager
+          </a>
+        </div>
+      {% else %}
+        <div class="shared-access-list">
+          {% for access in sharedByMe %}
+            <div class="shared-access-card">
+              <div class="card-header">
+                <div class="credential-icon color-{{ loop.index % 5 }}">
+                  {{ access.credential.name|first|upper }}
+                </div>
+                <div class="credential-info">
+                  <div class="credential-name">{{ access.credential.name }}</div>
+                  <div class="credential-domain">
+                    <i class="fas fa-globe"></i> {{ access.credential.domain }}
+                  </div>
+                </div>
+              </div>
+              
+              <div class="card-body">
+                <div class="shared-with">
+                  <div class="label">Partagé avec :</div>
+                  <div class="user-info">
+                    <div class="user-avatar color-{{ (loop.index * 3) % 5 }}">
+                      {{ access.guest.email|first|upper }}
+                    </div>
+                    <div>
+                      <div class="user-name">{{ access.guest.name }}</div>
+                      <div class="user-email">{{ access.guest.email }}</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="sharing-meta">
+                  <div class="sharing-date">
+                    <i class="far fa-calendar-alt"></i> Partagé le {{ access.createdAt|date('d/m/Y') }}
+                  </div>
+                </div>
+              </div>
+              
+              <div class="card-actions">
+                <form method="post" action="{{ path('shared_access_revoke', {'id': access.id}) }}" class="revoke-form">
+                  <input type="hidden" name="_token" value="{{ csrf_token('revoke' ~ access.id) }}">
+                  <button type="button" class="danger-btn revoke-btn" data-id="{{ access.id }}">
+                    <i class="fas fa-user-slash"></i>
+                    <span>Révoquer l'accès</span>
+                  </button>
+                </form>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+    
+    <div id="shared-with-me" class="tab-content">
+      {% if sharedWithMe is empty %}
+        <div class="empty-state">
+          <div class="empty-icon">
+            <i class="fas fa-inbox"></i>
+          </div>
+          <h3 class="empty-title">Aucun identifiant partagé avec vous</h3>
+          <p class="empty-text">Personne ne vous a partagé d'identifiants pour le moment.</p>
+        </div>
+      {% else %}
+        <div class="shared-access-list">
+          {% for access in sharedWithMe %}
+            <div class="shared-access-card">
+              <div class="card-header">
+                <div class="credential-icon color-{{ loop.index % 5 }}">
+                  {{ access.credential.name|first|upper }}
+                </div>
+                <div class="credential-info">
+                  <div class="credential-name">{{ access.credential.name }}</div>
+                  <div class="credential-domain">
+                    <i class="fas fa-globe"></i> {{ access.credential.domain }}
+                  </div>
+                </div>
+              </div>
+              
+              <div class="card-body">
+                <div class="shared-with">
+                  <div class="label">Partagé par :</div>
+                  <div class="user-info">
+                    <div class="user-avatar color-{{ (loop.index * 3) % 5 }}">
+                      {{ access.owner.email|first|upper }}
+                    </div>
+                    <div>
+                      <div class="user-name">{{ access.owner.name }}</div>
+                      <div class="user-email">{{ access.owner.email }}</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="sharing-meta">
+                  <div class="sharing-date">
+                    <i class="far fa-calendar-alt"></i> Partagé le {{ access.createdAt|date('d/m/Y') }}
+                  </div>
+                </div>
+              </div>
+              
+              <div class="card-actions">
+                <a href="{{ path('shared_access_view_credential', {'id': access.id}) }}" class="view-btn">
+                  <i class="fas fa-key"></i>
+                  <span>Voir les identifiants</span>
+                </a>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
   </div>
+</div>
 
-  <div class="shared-with-me-section">
-    <h2>Identifiants partagés avec moi</h2>
-
-    {% if sharedWithMe is empty %}
-      <div class="empty-state">
-        <div class="empty-icon">
-          <i class="fas fa-inbox"></i>
-        </div>
-        <h3 class="empty-title">Aucun identifiant partagé avec vous</h3>
-        <p class="empty-text">Personne ne vous a partagé d'identifiants pour le moment.</p>
-      </div>
-    {% else %}
-      <div class="shared-access-list">
-        {% for access in sharedWithMe %}
-          <div class="shared-access-card">
-            <div class="shared-with">
-              <div class="user-avatar">{{ access.owner.email|first|upper }}</div>
-              <div class="user-info">
-                <div class="user-name">{{ access.owner.name }}</div>
-                <div class="user-email">{{ access.owner.email }}</div>
-                <div class="sharing-date">Partagé le {{ access.createdAt|date('d/m/Y') }}</div>
-              </div>
-            </div>
-            <div class="shared-credential">
-              <div class="credential-icon">{{ access.credential.name|first|upper }}</div>
-              <div class="credential-info">
-                <div class="credential-name">{{ access.credential.name }}</div>
-                <div class="credential-domain">{{ access.credential.domain }}</div>
-              </div>
-            </div>
-            <div class="shared-actions">
-              <a href="{{ path('shared_access_view_credential', {'id': access.id}) }}" class="view-btn">
-                <i class="fas fa-eye"></i>
-                <span>Voir</span>
-              </a>
-            </div>
-          </div>
-        {% endfor %}
-      </div>
-    {% endif %}
+<!-- Modal de confirmation pour la révocation -->
+<div id="revoke-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Confirmer la révocation</h3>
+      <span class="modal-close">&times;</span>
+    </div>
+    <div class="modal-body">
+      <p>Êtes-vous sûr de vouloir révoquer cet accès partagé ?</p>
+      <p class="modal-warning"><i class="fas fa-exclamation-triangle"></i> Cette action est irréversible.</p>
+    </div>
+    <div class="modal-footer">
+      <button id="cancel-revoke" class="secondary-btn">Annuler</button>
+      <button id="confirm-revoke" class="danger-btn">Confirmer la révocation</button>
+    </div>
   </div>
 </div>
 
 <style>
-  .shared-access-section, .shared-with-me-section {
-    margin-bottom: 2rem;
+  /* Variables pour cohérence visuelle */
+
+  .content-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
   }
   
-  .section-header {
+  /* Couleurs prédéfinies pour les avatars et icônes */
+  .color-0 { background-color: var(--color-0); }
+  .color-1 { background-color: var(--color-1); }
+  .color-2 { background-color: var(--color-2); }
+  .color-3 { background-color: var(--color-3); }
+  .color-4 { background-color: var(--color-4); }
+  
+  .page-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .page-header h1 {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 1.8rem;
+  }
+  
+  .subtitle {
+    color: var(--text-secondary);
+    margin: 0.5rem 0 0 0;
+    font-size: 1rem;
+  }
+  
+  /* Système d'onglets */
+  .tabs-container {
+    margin-top: 2rem;
+  }
+  
+  .tabs {
+    display: flex;
+    border-bottom: 1px solid var(--medium-gray);
+    margin-bottom: 1.5rem;
+  }
+  
+  .tab-btn {
+    padding: 0.75rem 1.5rem;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: var(--text-secondary);
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .tab-btn:hover {
+    color: var(--primary-color);
+  }
+  
+  .tab-btn.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+  }
+  
+  .tab-content {
+    display: none;
+  }
+  
+  .tab-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  /* Alertes améliorées */
+  .alert {
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    animation: slideDown 0.3s ease;
+  }
+  
+  .alert-success {
+    background-color: rgba(52, 168, 83, 0.1);
+    border-left: 4px solid var(--success-color);
+    color: var(--success-color);
+  }
+  
+  .alert-danger {
+    background-color: rgba(234, 67, 53, 0.1);
+    border-left: 4px solid var(--danger-color);
+    color: var(--danger-color);
+  }
+  
+  .alert-icon {
+    margin-right: 0.75rem;
+    font-size: 1.2rem;
+  }
+  
+  .close-btn {
+    margin-left: auto;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: inherit;
+    opacity: 0.7;
+    transition: var(--transition);
+  }
+  
+  .close-btn:hover {
+    opacity: 1;
+  }
+  
+  /* États vides */
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    background-color: var(--light-gray);
+    border-radius: var(--border-radius);
+  }
+  
+  .empty-icon {
+    font-size: 2.5rem;
+    color: var(--dark-gray);
     margin-bottom: 1rem;
   }
   
+  .empty-title {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+  }
+  
+  .empty-text {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Cartes d'accès partagés */
   .shared-access-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
   }
   
   .shared-access-card {
     background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    padding: 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    transition: var(--transition);
   }
   
-  .user-avatar, .credential-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #f0f0f0;
+  .shared-access-card:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+  }
+  
+  .card-header {
+    padding: 1.25rem;
+    background-color: var(--light-gray);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-bottom: 1px solid var(--medium-gray);
+  }
+  
+  .card-body {
+    padding: 1.25rem;
+  }
+  
+  .card-actions {
+    padding: 0.75rem 1.25rem;
+    background-color: var(--light-gray);
+    display: flex;
+    justify-content: flex-end;
+    border-top: 1px solid var(--medium-gray);
+  }
+  
+  /* Éléments de la carte */
+  .credential-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    color: #333;
+    font-size: 1.5rem;
+    color: white;
   }
   
-  .shared-with, .shared-credential {
+  .credential-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+  }
+  
+  .credential-domain {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  
+  .shared-with {
+    margin-bottom: 1rem;
+  }
+  
+  .label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+  }
+  
+  .user-info {
     display: flex;
     align-items: center;
     gap: 0.75rem;
   }
   
-  .user-info, .credential-info {
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
     display: flex;
-    flex-direction: column;
-  }
-  
-  .user-name, .credential-name {
+    align-items: center;
+    justify-content: center;
     font-weight: bold;
+    color: white;
   }
   
-  .user-email, .sharing-date, .credential-domain {
+  .user-name {
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+  
+  .user-email {
     font-size: 0.85rem;
-    color: #666;
+    color: var(--text-secondary);
   }
   
-  .shared-actions {
+  .sharing-meta {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
     display: flex;
+    align-items: center;
+  }
+  
+  .sharing-date {
+    display: flex;
+    align-items: center;
     gap: 0.5rem;
   }
   
-  .view-btn {
-    background-color: #2196f3;
+  /* Boutons */
+  .primary-btn, .primary-btn-static {
+    background-color: var(--primary-color);
     color: white;
     border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--border-radius);
+    font-weight: 500;
     cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+  }
+  
+  .primary-btn:hover, .primary-btn-static:hover {
+    background-color: var(--primary-hover);
+  }
+  
+  .view-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.6rem 1rem;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -197,32 +484,215 @@
   }
   
   .view-btn:hover {
-    background-color: #1976d2;
+    background-color: var(--primary-hover);
   }
   
   .danger-btn {
-    background-color: #f44336;
+    background-color: var(--danger-color);
     color: white;
     border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
+    padding: 0.6rem 1rem;
+    border-radius: var(--border-radius);
+    font-weight: 500;
     cursor: pointer;
+    transition: var(--transition);
     display: flex;
     align-items: center;
     gap: 0.5rem;
   }
   
   .danger-btn:hover {
-    background-color: #d32f2f;
+    background-color: var(--danger-hover);
+  }
+  
+  .secondary-btn {
+    background-color: var(--medium-gray);
+    color: var(--text-primary);
+    border: none;
+    padding: 0.6rem 1rem;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  
+  .secondary-btn:hover {
+    background-color: var(--dark-gray);
+    color: white;
+  }
+  
+  /* Modal */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .modal-content {
+    background-color: white;
+    border-radius: var(--border-radius);
+    width: 100%;
+    max-width: 500px;
+    animation: modalFadeIn 0.3s ease;
+  }
+  
+  .modal-header {
+    padding: 1.25rem;
+    border-bottom: 1px solid var(--medium-gray);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .modal-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+  }
+  
+  .modal-close {
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--dark-gray);
+  }
+  
+  .modal-body {
+    padding: 1.5rem;
+  }
+  
+  .modal-warning {
+    color: var(--warning-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  
+  .modal-footer {
+    padding: 1rem 1.25rem;
+    background-color: var(--light-gray);
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    border-top: 1px solid var(--medium-gray);
+  }
+  
+  /* Animations */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideDown {
+    from { 
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to { 
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes modalFadeIn {
+    from { 
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to { 
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .shared-access-list {
+      grid-template-columns: 1fr;
+    }
+    
+    .page-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }
 </style>
 
 <script>
-  // Script pour fermer les alertes
+  // Système d'onglets
+  document.querySelectorAll('.tab-btn').forEach(button => {
+    button.addEventListener('click', function() {
+      // Désactiver tous les onglets
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      
+      // Activer l'onglet cliqué
+      this.classList.add('active');
+      document.getElementById(this.dataset.tab).classList.add('active');
+    });
+  });
+  
+  // Fermeture des alertes
   document.querySelectorAll('.close-btn').forEach(btn => {
     btn.addEventListener('click', function() {
-      this.parentElement.style.display = 'none';
+      const alert = this.parentElement;
+      alert.style.opacity = '0';
+      alert.style.transform = 'translateY(-10px)';
+      
+      setTimeout(() => {
+        alert.style.display = 'none';
+      }, 300);
     });
+  });
+  
+  // Gestion du modal de révocation
+  const modal = document.getElementById('revoke-modal');
+  const revokeButtons = document.querySelectorAll('.revoke-btn');
+  const closeBtn = document.querySelector('.modal-close');
+  const cancelBtn = document.getElementById('cancel-revoke');
+  const confirmBtn = document.getElementById('confirm-revoke');
+  let currentRevokeForm = null;
+  
+  revokeButtons.forEach(btn => {
+    btn.addEventListener('click', function() {
+      currentRevokeForm = this.closest('.revoke-form');
+      modal.style.display = 'flex';
+    });
+  });
+  
+  function closeModal() {
+    modal.style.opacity = '0';
+    setTimeout(() => {
+      modal.style.display = 'none';
+      modal.style.opacity = '1';
+    }, 300);
+  }
+  
+  closeBtn.addEventListener('click', closeModal);
+  cancelBtn.addEventListener('click', closeModal);
+  
+  confirmBtn.addEventListener('click', function() {
+    if (currentRevokeForm) {
+      currentRevokeForm.submit();
+    }
+  });
+  
+  // Fermer le modal en cliquant à l'extérieur
+  window.addEventListener('click', function(event) {
+    if (event.target === modal) {
+      closeModal();
+    }
   });
 </script>
 {% endblock %}

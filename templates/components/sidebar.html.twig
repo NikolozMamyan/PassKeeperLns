@@ -8,32 +8,43 @@
       <img class="logo-text" src="https://pro.ultrapop.com/frontend/img/ultrapop-logo-full.svg" style="width:150px;"/>
     </div>
   </div>
-  <div class="sidebar-menu">
-    <a href="{{ path('credential_index') }}" class="menu-item active">
-      <i class="fas fa-key"></i>
-      <span>Mes identifiants</span>
-    </a>
-    <a href="#" class="menu-item">
-      <i class="fas fa-folder"></i>
-      <span>Catégories</span>
-    </a>
-    <a href="#" class="menu-item">
-      <i class="fas fa-shield-alt"></i>
-      <span>Sécurité</span>
-    </a>
-    <a href="#" class="menu-item">
-      <i class="fas fa-share-alt"></i>
-      <span>Partage</span>
-    </a>
-    <a href="#" class="menu-item">
-      <i class="fas fa-history"></i>
-      <span>Historique</span>
-    </a>
-    <a href="#" class="menu-item">
-      <i class="fas fa-cog"></i>
-      <span>Paramètres</span>
-    </a>
-  </div>
+<div class="sidebar-menu">
+  <a href="{{ path('credential_index') }}"
+     class="menu-item {% if app.request.attributes.get('_route') == 'credential_index' %}active{% endif %}">
+    <i class="fas fa-key"></i>
+    <span>Mes identifiants</span>
+  </a>
+
+  <a href="#" class="menu-item">
+    <i class="fas fa-folder"></i>
+    <span>Catégories</span>
+  </a>
+
+  <a href="{{ path('shared_access_index') }}"
+     class="menu-item {% if app.request.attributes.get('_route') == 'shared_access_index' %}active{% endif %}">
+    <i class="fas fa-shield-alt"></i>
+    <span>Sécurité</span>
+  </a>
+
+  <a href="#" class="menu-item">
+    <i class="fas fa-share-alt"></i>
+    <span>Partage</span>
+  </a>
+
+  <a href="#" class="menu-item">
+    <i class="fas fa-history"></i>
+    <span>Historique</span>
+  </a>
+
+  <a href="#" class="menu-item">
+    <i class="fas fa-cog"></i>
+    <span>Paramètres</span>
+  </a>
+</div>
+<a href="{{ path('app_logout') }}" class="menu-item">
+  <i class="fas fa-sign-out-alt logout"></i>
+  <span>Déconnexion</span>
+</a>
   <div class="sidebar-footer">
     <div class="user-profile">
       <div class="user-avatar">

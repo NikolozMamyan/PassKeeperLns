@@ -11,6 +11,16 @@
     --transition-slow: 0.4s ease;
     --accent-color: #ff6b6b;
     --priority-high: #ef4444;
+
+    --light-gray: #f8f9fa;
+    --medium-gray: #e0e0e0;
+    --dark-gray: #757575;
+
+    --color-0: #4285f4;
+    --color-1: #ea4335;
+    --color-2: #fbbc05;
+    --color-3: #34a853;
+    --color-4: #673ab7;
   }
   
   body {
