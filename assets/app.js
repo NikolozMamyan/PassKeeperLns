@@ -3,7 +3,7 @@
 import './styles/bases.css'
 import './styles/sidebar.css'
 import './styles/header.css'
-import './styles/dashboard.css'
+import './styles/credentials.css'
 
 /*JS modules */
 import { Application } from "@hotwired/stimulus";

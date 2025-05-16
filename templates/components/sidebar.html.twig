@@ -20,8 +20,8 @@
     <span>Catégories</span>
   </a>
 
-  <a href="#"
-     class="menu-item">
+    <a href="{{ path('app_security') }}"
+     class="menu-item {% if app.request.attributes.get('_route') == 'app_security' %}active{% endif %}">
     <i class="fas fa-shield-alt"></i>
     <span>Sécurité</span>
   </a>

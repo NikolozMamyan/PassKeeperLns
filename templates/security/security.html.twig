@@ -1,0 +1,962 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sécurité - Gestion du Token API{% endblock %}
+
+{% block body %}
+<!-- API Token Management Section -->
+<div class="container token-management-section">
+  <div class="section-header">
+    <h2>Gestion du Token API</h2>
+    <p class="section-description">Ce token personnel vous permet d'accéder à vos données via l'API.</p>
+  </div>
+  <!-- How to use Token Demo Section -->
+  <div class="demo-section">
+    <h2>Comment utiliser votre token</h2>
+    
+    <div class="demo-container">
+      <div class="demo-timeline">
+        <div class="timeline-track">
+          <div class="timeline-indicator" id="timelineIndicator"></div>
+        </div>
+        <div class="timeline-markers">
+          <div class="timeline-step active" data-step="1">1</div>
+          <div class="timeline-step" data-step="2">2</div>
+          <div class="timeline-step" data-step="3">3</div>
+        </div>
+      </div>
+      
+      <div class="demo-carousel">
+        <div class="demo-slide active" id="slide-1">
+          <div class="demo-content">
+            <div class="demo-animation">
+              <div class="browser-window">
+                <div class="browser-header">
+                  <div class="browser-actions">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                  <div class="browser-address-bar">
+                    <i class="fas fa-lock"></i>
+                    <span>app.votresite.com/security</span>
+                  </div>
+                </div>
+                <div class="browser-body">
+                  <div class="token-field-animation">
+                    <div class="token-input-demo">••••••••••••••••••••••</div>
+                    <button class="btn-copy-demo">
+                      <i class="fas fa-copy"></i>
+                    </button>
+                  </div>
+                  <div class="cursor"></div>
+                </div>
+              </div>
+            </div>
+            <div class="demo-text">
+              <h3>Copier votre token API</h3>
+              <p>Cliquez sur le bouton <i class="fas fa-copy"></i> pour copier automatiquement votre token dans le presse-papiers.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="demo-slide" id="slide-2">
+          <div class="demo-content">
+            <div class="demo-animation">
+              <div class="browser-window">
+                <div class="browser-header">
+                  <div class="browser-actions">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                  <div class="browser-address-bar">
+                    <i class="fas fa-puzzle-piece"></i>
+                    <span>Extensions</span>
+                  </div>
+                </div>
+                <div class="browser-body with-extension">
+                  <div class="extension-popup">
+                    <div class="extension-header">
+                      <div class="app-logo">
+                        <i class="fas fa-shield-alt"></i>
+                      </div>
+                      <span>Notre Extension</span>
+                    </div>
+                    <div class="extension-form">
+                      <label>Token API</label>
+                      <div class="extension-input-group">
+                        <input type="text" placeholder="Collez votre token ici">
+                      </div>
+                    </div>
+                    <div class="cursor blinking"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="demo-text">
+              <h3>Ouvrir l'extension</h3>
+              <p>Cliquez sur l'icône de notre extension dans votre navigateur et repérez le champ de token API.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="demo-slide" id="slide-3">
+          <div class="demo-content">
+            <div class="demo-animation">
+              <div class="browser-window">
+                <div class="browser-header">
+                  <div class="browser-actions">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                  <div class="browser-address-bar">
+                    <i class="fas fa-puzzle-piece"></i>
+                    <span>Extensions</span>
+                  </div>
+                </div>
+                <div class="browser-body with-extension">
+                  <div class="extension-popup">
+                    <div class="extension-header">
+                      <div class="app-logo">
+                        <i class="fas fa-shield-alt"></i>
+                      </div>
+                      <span>Notre Extension</span>
+                    </div>
+                    <div class="extension-form">
+                      <label>Token API</label>
+                      <div class="extension-input-group token-pasted">
+                        <input type="text" value="••••••••••••••••••••••">
+                        <i class="fas fa-check-circle"></i>
+                      </div>
+                      <button class="extension-btn-save">Enregistrer</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="demo-text">
+              <h3>Coller et sauvegarder</h3>
+              <p>Collez le token avec <strong>Ctrl+V</strong> (ou <strong>⌘+V</strong> sur Mac) puis cliquez sur <strong>Enregistrer</strong>. Votre extension est maintenant configurée !</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="demo-navigation">
+        <button class="demo-nav-btn" id="prevBtn" disabled>
+          <i class="fas fa-chevron-left"></i>
+          Précédent
+        </button>
+        <button class="demo-nav-btn" id="nextBtn">
+          Suivant
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="token-card">
+    <div class="token-info">
+      <div class="token-label">Votre token API</div>
+      <div class="token-display">
+        <div class="token-input-wrapper">
+          <input type="text" class="token-input" value="{{ user.apiToken }}" readonly>
+          <button class="action-btn btn-view" id="toggleTokenBtn" title="Afficher/Masquer">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+        <button class="action-btn btn-copy" id="copyTokenBtn" title="Copier">
+          <i class="fas fa-copy"></i>
+          <span class="tooltip">Copié !</span>
+        </button>
+      </div>
+      <div class="token-warning">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span>Ne partagez jamais ce token. Il donne accès à tous vos identifiants stockés.</span>
+      </div>
+    </div>
+    <div class="token-actions">
+      <form method="post" action="{{ path('app_token_generate') }}" onsubmit="return confirm('Êtes-vous sûr de vouloir régénérer votre token API? Cette action invalidera votre token actuel.');">
+        <input type="hidden" name="_token" value="{{ csrf_token('regenerate') }}">
+        <button class="primary-btn" type="submit">
+          <i class="fas fa-sync-alt"></i>
+          <span>Régénérer le token</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+  .container {
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 0 15px;
+  }
+
+  /* Token Management Section */
+  .token-management-section {
+    margin: 40px auto;
+  }
+
+  .section-header {
+    margin-bottom: 25px;
+  }
+
+  .section-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 15px;
+  }
+
+  .section-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 10px;
+  }
+
+  .section-description {
+    color: var(--text-light);
+    font-size: 1rem;
+  }
+
+  .token-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 15px var(--shadow-color);
+    overflow: hidden;
+    margin-bottom: 40px;
+  }
+
+  .token-info {
+    padding: 25px;
+  }
+
+  .token-label {
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--text-color);
+    font-size: 1.05rem;
+  }
+
+  .token-display {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .token-input-wrapper {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .token-input {
+    width: 100%;
+    padding: 14px 45px 14px 15px;
+    background-color: #f8f9fa;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-family: monospace;
+    font-size: 0.95rem;
+    color: var(--text-color);
+    -webkit-text-security: disc;
+    letter-spacing: 2px;
+    transition: border-color 0.2s ease;
+  }
+
+  .token-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
+  }
+
+  .token-input.visible {
+    -webkit-text-security: none;
+    letter-spacing: normal;
+  }
+
+  .btn-view {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    color: var(--text-light);
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+  }
+
+  .btn-view:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: var(--primary-color);
+  }
+
+  .btn-copy {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    position: relative;
+    transition: background-color 0.2s ease;
+  }
+
+  .btn-copy:hover {
+    background-color: var(--primary-hover);
+  }
+
+  .btn-copy .tooltip {
+    position: absolute;
+    bottom: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .btn-copy.copied .tooltip {
+    opacity: 1;
+  }
+
+  .token-warning {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 15px;
+    background-color: rgba(230, 126, 34, 0.1);
+    border-radius: 8px;
+    border-left: 4px solid var(--warning-color);
+  }
+
+  .token-warning i {
+    color: var(--warning-color);
+    font-size: 1.1rem;
+    margin-top: 2px;
+  }
+
+  .token-warning span {
+    color: var(--text-color);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .token-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 20px 25px;
+    background-color: #f8f9fa;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .primary-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .primary-btn:hover {
+    background-color: var(--primary-hover);
+  }
+
+  .action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+
+  /* Demo Section Styles */
+  .demo-section {
+    margin: 50px 0;
+  }
+
+  .demo-section h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 25px;
+  }
+
+  .demo-container {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 15px var(--shadow-color);
+    overflow: hidden;
+    padding: 30px;
+  }
+
+  /* Timeline */
+  .demo-timeline {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+
+  .timeline-track {
+    width: 80%;
+    height: 4px;
+    background-color: var(--border-color);
+    border-radius: 2px;
+    position: relative;
+    margin-bottom: 15px;
+  }
+
+  .timeline-indicator {
+    position: absolute;
+    height: 100%;
+    width: 0%;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+    transition: width var(--transition-speed) ease;
+  }
+
+  .timeline-markers {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+  }
+
+  .timeline-step {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 2px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: var(--text-light);
+    position: relative;
+    transition: all var(--transition-speed) ease;
+  }
+
+  .timeline-step.active {
+    border-color: var(--primary-color);
+    background-color: var(--primary-color);
+    color: white;
+  }
+
+  .timeline-step.completed {
+    border-color: var(--primary-color);
+    background-color: var(--primary-color);
+    color: white;
+  }
+
+  /* Carousel */
+  .demo-carousel {
+    position: relative;
+    height: 400px;
+    overflow: hidden;
+    margin-bottom: 30px;
+  }
+
+  .demo-slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transform: translateX(50px);
+    transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .demo-slide.active {
+    opacity: 1;
+    transform: translateX(0);
+    z-index: 1;
+  }
+
+  .demo-content {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+  }
+
+  .demo-animation {
+    flex: 3;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .demo-text {
+    flex: 2;
+    padding: 0 20px;
+  }
+
+  .demo-text h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--text-color);
+  }
+
+  .demo-text p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-light);
+  }
+
+  /* Browser animation */
+  .browser-window {
+    width: 100%;
+    max-width: 380px;
+    height: 300px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+  }
+
+  .browser-header {
+    background-color: #f0f0f0;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .browser-actions {
+    display: flex;
+    gap: 6px;
+    margin-right: 15px;
+  }
+
+  .browser-actions span {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #ccc;
+  }
+
+  .browser-actions span:nth-child(1) {
+    background-color: #ff6057;
+  }
+
+  .browser-actions span:nth-child(2) {
+    background-color: #ffbd2e;
+  }
+
+  .browser-actions span:nth-child(3) {
+    background-color: #27c93f;
+  }
+
+  .browser-address-bar {
+    flex: 1;
+    height: 25px;
+    background-color: #fff;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    font-size: 12px;
+    color: #555;
+  }
+
+  .browser-address-bar i {
+    margin-right: 6px;
+    color: #888;
+  }
+
+  .browser-body {
+    background-color: #fff;
+    height: calc(100% - 40px);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .browser-body.with-extension {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
+  /* Token field animation */
+  .token-field-animation {
+    width: 100%;
+    display: flex;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .token-input-demo {
+    flex: 1;
+    padding: 12px;
+    background-color: #f8f9fa;
+    font-family: monospace;
+    font-size: 14px;
+    color: #333;
+  }
+
+  .btn-copy-demo {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+
+  /* Cursor animation */
+  .cursor {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background-color: rgba(74, 108, 247, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 10;
+    animation: moveToButton 3s infinite;
+  }
+
+  .cursor.blinking {
+    width: 2px;
+    height: 16px;
+    background-color: #333;
+    border-radius: 0;
+    animation: blinkCursor 1s infinite;
+  }
+
+  /* Extension popup */
+  .extension-popup {
+    width: 300px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+  }
+
+  .extension-header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .app-logo {
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .app-logo i {
+    color: var(--primary-color);
+    font-size: 16px;
+  }
+
+  .extension-form {
+    padding: 20px;
+  }
+
+  .extension-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #555;
+    font-size: 14px;
+  }
+
+  .extension-input-group {
+    position: relative;
+    margin-bottom: 15px;
+  }
+
+  .extension-input-group input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+
+  .extension-input-group.token-pasted {
+    border: 1px solid var(--success-color);
+    border-radius: 4px;
+    background-color: rgba(46, 204, 113, 0.05);
+  }
+
+  .extension-input-group.token-pasted input {
+    border: none;
+    background: transparent;
+  }
+
+  .extension-input-group i.fa-check-circle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--success-color);
+  }
+
+  .extension-btn-save {
+    width: 100%;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .extension-btn-save:hover {
+    background-color: var(--primary-hover);
+  }
+
+  /* Navigation buttons */
+  .demo-navigation {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .demo-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .demo-nav-btn:hover:not([disabled]) {
+    background-color: var(--primary-light);
+  }
+
+  .demo-nav-btn[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: #ccc;
+    color: #999;
+  }
+
+  /* Animations */
+  @keyframes moveToButton {
+    0%, 20% {
+      top: 50%;
+      left: 40%;
+    }
+    30%, 40% {
+      top: 50%;
+      left: 80%;
+    }
+    45%, 55% {
+      top: 50%;
+      left: 80%;
+      transform: translate(-50%, -50%) scale(0.8);
+    }
+    60%, 70% {
+      top: 50%;
+      left: 40%;
+    }
+    75%, 100% {
+      top: 50%;
+      left: 40%;
+    }
+  }
+
+  @keyframes blinkCursor {
+    0%, 49% {
+      opacity: 1;
+    }
+    50%, 100% {
+      opacity: 0;
+    }
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .token-display {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .btn-copy {
+      width: 100%;
+      justify-content: center;
+    }
+    
+    .demo-content {
+      flex-direction: column;
+    }
+    
+    .demo-carousel {
+      height: 550px;
+    }
+
+    .demo-animation {
+      margin-bottom: 20px;
+    }
+    
+    .browser-window {
+      max-width: 300px;
+    }
+    
+    .timeline-track,
+    .timeline-markers {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  // Token Toggle & Copy functionality
+  document.getElementById('toggleTokenBtn').addEventListener('click', function() {
+    const tokenInput = document.querySelector('.token-input');
+    const eyeIcon = this.querySelector('i');
+    
+    if (tokenInput.classList.contains('visible')) {
+      tokenInput.classList.remove('visible');
+      eyeIcon.classList.remove('fa-eye-slash');
+      eyeIcon.classList.add('fa-eye');
+    } else {
+      tokenInput.classList.add('visible');
+      eyeIcon.classList.remove('fa-eye');
+      eyeIcon.classList.add('fa-eye-slash');
+    }
+  });
+
+  document.getElementById('copyTokenBtn').addEventListener('click', function() {
+    const tokenInput = document.querySelector('.token-input');
+    
+    // Make input visible temporarily if it's hidden
+    const wasVisible = tokenInput.classList.contains('visible');
+    if (!wasVisible) {
+      tokenInput.classList.add('visible');
+    }
+    
+    // Copy to clipboard
+    tokenInput.select();
+    document.execCommand('copy');
+    
+    // Restore visibility
+    if (!wasVisible) {
+      tokenInput.classList.remove('visible');
+    }
+    
+    // Show feedback
+    this.classList.add('copied');
+    
+    setTimeout(() => {
+      this.classList.remove('copied');
+    }, 2000);
+  });
+
+  // Demo Carousel functionality
+  const nextBtn = document.getElementById('nextBtn');
+  const prevBtn = document.getElementById('prevBtn');
+  const slides = document.querySelectorAll('.demo-slide');
+  const timelineIndicator = document.getElementById('timelineIndicator');
+  const steps = document.querySelectorAll('.timeline-step');
+  let currentSlide = 0;
+
+  function updateSlide() {
+    // Update slides
+    slides.forEach((slide, index) => {
+      slide.classList.remove('active');
+      if (index === currentSlide) {
+        slide.classList.add('active');
+      }
+    });
+    
+    // Update timeline
+    const progressPercentage = (currentSlide / (slides.length - 1)) * 100;
+    timelineIndicator.style.width = `${progressPercentage}%`;
+    
+    // Update steps
+    steps.forEach((step, index) => {
+      step.classList.remove('active', 'completed');
+      if (index === currentSlide) {
+        step.classList.add('active');
+      } else if (index < currentSlide) {
+        step.classList.add('completed');
+      }
+    });
+    
+    // Update buttons
+    prevBtn.disabled = currentSlide === 0;
+    nextBtn.disabled = currentSlide === slides.length - 1;
+    
+    // Change next button text on last slide
+    if (currentSlide === slides.length - 1) {
+      nextBtn.innerHTML = 'Terminer <i class="fas fa-check"></i>';
+    } else {
+      nextBtn.innerHTML = 'Suivant <i class="fas fa-chevron-right"></i>';
+    }
+  }
+
+  nextBtn.addEventListener('click', () => {
+    if (currentSlide < slides.length - 1) {
+      currentSlide++;
+      updateSlide();
+    }
+  });
+
+  prevBtn.addEventListener('click', () => {
+    if (currentSlide > 0) {
+      currentSlide--;
+      updateSlide();
+    }
+  });
+
+  // Step clicks
+  steps.forEach((step, index) => {
+    step.addEventListener('click', () => {
+      currentSlide = index;
+      updateSlide();
+    });
+  });
+
+  // Initialize
+  updateSlide();
+</script>
+{% endblock %}

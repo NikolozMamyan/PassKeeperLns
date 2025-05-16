@@ -2,9 +2,10 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
@@ -22,6 +23,33 @@ class SecurityController extends AbstractController
             'last_username' => $lastUsername,
             'error' => $error,
             'heading'=> ''
+        ]);
+    }
+
+        #[Route(path: '/security', name: 'app_security')]
+    public function security(): Response
+    {
+        $user = $this->getUser();
+
+        return $this->render('security/security.html.twig', [
+            'user' => $user,
+            'heading' => 'Security'
+        ]);
+    }
+
+            #[Route(path: '/token/generate', name: 'app_token_generate')]
+    public function tokenGenerate(EntityManagerInterface $em): Response
+    {
+        $user = $this->getUser();
+
+        $user ->regenerateApiToken();
+
+        $em->persist($user);
+        $em->flush();
+
+        return $this->render('security/security.html.twig', [
+            'user' => $user,
+            'heading' => 'Security'
         ]);
     }
 
