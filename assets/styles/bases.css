@@ -20,6 +20,8 @@
     --medium-gray: #e0e0e0;
     --dark-gray: #757575;
 
+    --card-shadow: 0 2px 10px rgba(0,0,0,0.08);
+
     --color-0: #4285f4;
     --color-1: #ea4335;
     --color-2: #fbbc05;
