@@ -35,6 +35,7 @@ class CredentialController extends AbstractController
         return $this->render('credential/index.html.twig', [
             'credentials' => $credentialRepository->findByUser($user),
             'sahredAccesses' =>  $sharedAccesses = $sharedAccessRepository->findSharedWith($this->getUser()),
+            'heading' => 'Mes accès'
         ]);
     }
 
@@ -68,6 +69,7 @@ class CredentialController extends AbstractController
         return $this->render('credential/new.html.twig', [
             'credential' => $credential,
             'form' => $form,
+            'heading' => 'Mes accès'
         ]);
     }
 
@@ -81,6 +83,7 @@ class CredentialController extends AbstractController
         return $this->render('credential/show.html.twig', [
             'credential' => $credential,
             'decryptedPassword' => $decryptedPassword,
+            'heading' => 'Mes accès'
         ]);
     }
 
@@ -119,6 +122,7 @@ class CredentialController extends AbstractController
         return $this->render('credential/edit.html.twig', [
             'credential' => $credential,
             'form' => $form,
+            'heading' => 'Mes accès'
         ]);
     }
 

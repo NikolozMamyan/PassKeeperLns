@@ -33,6 +33,7 @@ class SharedAccessController extends AbstractController
         return $this->render('shared_access/index.html.twig', [
             'sharedByMe' => $sharedByMe,
             'sharedWithMe' => $sharedWithMe,
+            'heading' => 'Partages'
         ]);
     }
     
@@ -106,6 +107,7 @@ class SharedAccessController extends AbstractController
         
         return $this->render('shared_access/new.html.twig', [
             'credentials' => $credentials,
+            'heading' => 'Partages'
         ]);
     }
     
@@ -147,6 +149,7 @@ class SharedAccessController extends AbstractController
             'credential' => $credential,
             'decryptedPassword' => $decryptedPassword,
             'owner' => $sharedAccess->getOwner(),
+            'heading' => 'Partages'
         ]);
     }
 }

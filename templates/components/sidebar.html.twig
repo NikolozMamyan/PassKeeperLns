@@ -20,13 +20,14 @@
     <span>Catégories</span>
   </a>
 
-  <a href="{{ path('shared_access_index') }}"
-     class="menu-item {% if app.request.attributes.get('_route') == 'shared_access_index' %}active{% endif %}">
+  <a href="#"
+     class="menu-item">
     <i class="fas fa-shield-alt"></i>
     <span>Sécurité</span>
   </a>
 
-  <a href="#" class="menu-item">
+  <a href="{{ path('shared_access_index') }}"
+     class="menu-item {% if app.request.attributes.get('_route') == 'shared_access_index' %}active{% endif %}">
     <i class="fas fa-share-alt"></i>
     <span>Partage</span>
   </a>

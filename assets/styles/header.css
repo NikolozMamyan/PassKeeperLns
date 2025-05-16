@@ -93,4 +93,8 @@
     font-weight: 500;
     font-size: 0.9rem;
   }
-  
+  @media (max-width: 768px) {
+  .user-profile {
+    display: none;
+  }
+}

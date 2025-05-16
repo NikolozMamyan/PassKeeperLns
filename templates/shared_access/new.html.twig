@@ -6,10 +6,6 @@
 {% block body %}
 <div class="content-container">
   <div class="page-header">
-    <div>
-      <h1>Partager des identifiants</h1>
-      <p class="subtitle">Sélectionnez les identifiants à partager avec un autre utilisateur</p>
-    </div>
     <a href="{{ path('shared_access_index') }}" class="back-btn">
       <i class="fas fa-arrow-left"></i>
       <span>Retour</span>
@@ -162,6 +158,7 @@
     padding: 0.5rem 1rem;
     border-radius: var(--border-radius);
     transition: var(--transition);
+    border:1px solid var(--text-color);
   }
   
   .back-btn:hover {
