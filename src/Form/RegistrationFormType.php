@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -21,9 +22,8 @@ class RegistrationFormType extends AbstractType
         $builder
            
             ->add('email', EmailType::class, [
-        'mapped' => false,
-        'label' => "Adresse Email",
-        'constraints' => [
+    'label' => "Adresse Email",
+    'constraints' => [
             new NotBlank([
                 'message' => "Veuillez saisir une adresse e-mail.",
             ]),
@@ -32,7 +32,16 @@ class RegistrationFormType extends AbstractType
             ]),
         ],
     ])
-            ->add('name')
+       
+
+->add('name', TextType::class, [
+    'label' => 'Prénom',
+    'constraints' => [
+        new NotBlank(['message' => 'Veuillez saisir votre prénom.']),
+        new Length(['max' => 255]),
+    ],
+])
+
             ->add('agreeTerms', CheckboxType::class, [
     'mapped' => false,
     'label' => "J'accepte les termes et conditions",
