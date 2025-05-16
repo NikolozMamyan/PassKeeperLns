@@ -1,0 +1,228 @@
+{# templates/shared_access/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Identifiants partagés{% endblock %}
+
+{% block body %}
+<div class="content-container">
+  <div class="page-header">
+    <h1>Gestion des accès partagés</h1>
+    <p class="subtitle">Partagez vos identifiants avec d'autres utilisateurs en toute sécurité.</p>
+  </div>
+
+  {% for message in app.flashes('success') %}
+    <div class="alert alert-success">
+      <span>{{ message }}</span>
+      <button class="close-btn"><i class="fas fa-times"></i></button>
+    </div>
+  {% endfor %}
+
+  {% for message in app.flashes('error') %}
+    <div class="alert alert-danger">
+      <span>{{ message }}</span>
+      <button class="close-btn"><i class="fas fa-times"></i></button>
+    </div>
+  {% endfor %}
+
+  <div class="shared-access-section">
+    <div class="section-header">
+      <h2>Identifiants que j'ai partagés</h2>
+      <a href="{{ path('shared_access_new') }}" class="primary-btn-static">
+        <i class="fas fa-share-alt"></i>
+        <span>Partager des identifiants</span>
+      </a>
+    </div>
+
+    {% if sharedByMe is empty %}
+      <div class="empty-state">
+        <div class="empty-icon">
+          <i class="fas fa-share-alt"></i>
+        </div>
+        <h3 class="empty-title">Aucun partage effectué</h3>
+        <p class="empty-text">Vous n'avez partagé aucun identifiant avec d'autres utilisateurs.</p>
+      </div>
+    {% else %}
+      <div class="shared-access-list">
+        {% for access in sharedByMe %}
+          <div class="shared-access-card">
+            <div class="shared-with">
+              <div class="user-avatar">{{ access.guest.email|first|upper }}</div>
+              <div class="user-info">
+                <div class="user-name">{{ access.guest.name }}</div>
+                <div class="user-email">{{ access.guest.email }}</div>
+                <div class="sharing-date">Partagé le {{ access.createdAt|date('d/m/Y') }}</div>
+              </div>
+            </div>
+            <div class="shared-credential">
+              <div class="credential-icon">{{ access.credential.name|first|upper }}</div>
+              <div class="credential-info">
+                <div class="credential-name">{{ access.credential.name }}</div>
+                <div class="credential-domain">{{ access.credential.domain }}</div>
+              </div>
+            </div>
+            <div class="shared-actions">
+              <form method="post" action="{{ path('shared_access_revoke', {'id': access.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir révoquer cet accès partagé ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('revoke' ~ access.id) }}">
+                <button type="submit" class="danger-btn">
+                  <i class="fas fa-trash"></i>
+                  <span>Révoquer</span>
+                </button>
+              </form>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="shared-with-me-section">
+    <h2>Identifiants partagés avec moi</h2>
+
+    {% if sharedWithMe is empty %}
+      <div class="empty-state">
+        <div class="empty-icon">
+          <i class="fas fa-inbox"></i>
+        </div>
+        <h3 class="empty-title">Aucun identifiant partagé avec vous</h3>
+        <p class="empty-text">Personne ne vous a partagé d'identifiants pour le moment.</p>
+      </div>
+    {% else %}
+      <div class="shared-access-list">
+        {% for access in sharedWithMe %}
+          <div class="shared-access-card">
+            <div class="shared-with">
+              <div class="user-avatar">{{ access.owner.email|first|upper }}</div>
+              <div class="user-info">
+                <div class="user-name">{{ access.owner.name }}</div>
+                <div class="user-email">{{ access.owner.email }}</div>
+                <div class="sharing-date">Partagé le {{ access.createdAt|date('d/m/Y') }}</div>
+              </div>
+            </div>
+            <div class="shared-credential">
+              <div class="credential-icon">{{ access.credential.name|first|upper }}</div>
+              <div class="credential-info">
+                <div class="credential-name">{{ access.credential.name }}</div>
+                <div class="credential-domain">{{ access.credential.domain }}</div>
+              </div>
+            </div>
+            <div class="shared-actions">
+              <a href="{{ path('shared_access_view_credential', {'id': access.id}) }}" class="view-btn">
+                <i class="fas fa-eye"></i>
+                <span>Voir</span>
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .shared-access-section, .shared-with-me-section {
+    margin-bottom: 2rem;
+  }
+  
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .shared-access-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .shared-access-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .user-avatar, .credential-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .shared-with, .shared-credential {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .user-info, .credential-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .user-name, .credential-name {
+    font-weight: bold;
+  }
+  
+  .user-email, .sharing-date, .credential-domain {
+    font-size: 0.85rem;
+    color: #666;
+  }
+  
+  .shared-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .view-btn {
+    background-color: #2196f3;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+  }
+  
+  .view-btn:hover {
+    background-color: #1976d2;
+  }
+  
+  .danger-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .danger-btn:hover {
+    background-color: #d32f2f;
+  }
+</style>
+
+<script>
+  // Script pour fermer les alertes
+  document.querySelectorAll('.close-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      this.parentElement.style.display = 'none';
+    });
+  });
+</script>
+{% endblock %}

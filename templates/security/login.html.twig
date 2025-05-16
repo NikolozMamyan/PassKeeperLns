@@ -5,6 +5,9 @@
 {% block stylesheets %}
     {{ parent() }}
     <style>
+    .main-content{
+        margin-left:0px !important;
+    }
         .login-container {
             max-width: 450px;
             margin: 80px auto;
@@ -21,7 +24,7 @@
         }
         
         .login-header {
-            background: linear-gradient(135deg, #4f46e5, #818cf8);
+            background: linear-gradient(135deg, var(--primary-color), #818cf8);
             padding: 30px;
             text-align: center;
             color: white;
@@ -81,7 +84,7 @@
             display: block;
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, #4f46e5, #818cf8);
+            background: linear-gradient(135deg, var(--primary-color), #818cf8);
             border: none;
             border-radius: 8px;
             color: white;

@@ -36,6 +36,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 64, unique: true, nullable: true)]
     private ?string $apiToken = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -119,6 +122,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // 64 caractères hexadécimaux (256 bits)
         $this->apiToken = bin2hex(random_bytes(32));
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
 
         return $this;
     }

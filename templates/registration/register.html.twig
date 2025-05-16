@@ -21,7 +21,7 @@
         }
 
         .register-header {
-            background: linear-gradient(135deg, #4f46e5, #818cf8);
+            background: linear-gradient(135deg, var(--primary-color), #818cf8);
             padding: 30px;
             text-align: center;
             color: white;
@@ -70,7 +70,7 @@
             display: block;
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, #4f46e5, #818cf8);
+            background: linear-gradient(135deg, var(--primary-color), #818cf8);
             border: none;
             border-radius: 8px;
             color: white;
@@ -146,6 +146,12 @@
                 {{ form_label(registrationForm.email, 'Adresse email', {'label_attr': {'class': 'form-label'}}) }}
                 {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control'}}) }}
                 {{ form_errors(registrationForm.email) }}
+            </div>
+            
+            <div class="form-group">
+                {{ form_label(registrationForm.name, 'Prénom', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(registrationForm.name, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(registrationForm.name) }}
             </div>
 
             <div class="form-group">

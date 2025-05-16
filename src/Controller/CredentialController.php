@@ -4,16 +4,17 @@ namespace App\Controller;
 
 use App\Entity\Credential;
 use App\Form\CredentialType;
-use App\Repository\CredentialRepository;
 use App\Service\EncryptionService;
+use App\Repository\CredentialRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Repository\SharedAccessRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/credentials')]
 class CredentialController extends AbstractController
@@ -26,12 +27,14 @@ class CredentialController extends AbstractController
 
     #[Route('', name: 'credential_index', methods: ['GET'])]
     #[IsGranted('ROLE_USER')]
-    public function index(CredentialRepository $credentialRepository): Response
+    public function index(SharedAccessRepository $sharedAccessRepository ,CredentialRepository $credentialRepository): Response
     {
         $user = $this->getUser();
+        $sharedAccesses = $sharedAccessRepository->findSharedWith($this->getUser());
         
         return $this->render('credential/index.html.twig', [
             'credentials' => $credentialRepository->findByUser($user),
+            'sahredAccesses' =>  $sharedAccesses = $sharedAccessRepository->findSharedWith($this->getUser()),
         ]);
     }
 
