@@ -2,9 +2,14 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\SharedAccess;
+use App\Repository\UserRepository;
+use App\Service\EncryptionService;
+use App\Repository\SharedAccessRepository;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ApiSharedController extends AbstractController
 {
